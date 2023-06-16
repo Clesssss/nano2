@@ -6,10 +6,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -27,7 +25,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	boolean skeletonIdle;
 	int count;
 	Player player = new Player(300,30);
-	Skeleton skeleton = new Skeleton(10,10);
+	Skeleton skeleton;
 	TextureRegion prevFrame;
 
 	// A variable for tracking elapsed time for the animation
@@ -35,6 +33,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+		skeleton = new Skeleton(skeletonHitbox, 10, 50);
 		skeletonIdle = true;
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 2784,1650);
@@ -48,6 +47,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		player.slide();
 		skeleton.idle();
 		skeleton.takeHit();
+		skeleton.death();
 		playerHitbox = new Rectangle(playerX + 104.5f ,playerY + 99.75f, 204.25f,152);
 		skeletonHitbox = new Rectangle(800 + 240,0 + 196,180,204);
 		rekt = new Texture("Untitled (1).png");
@@ -60,6 +60,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void render () {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Clear screen
 		stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
+
 		TextureRegion currentFrame;
 		TextureRegion skeletonFrame = skeleton.idleAnimation.getKeyFrame(stateTime,true);;
 		if(Gdx.input.isKeyPressed(Input.Keys.A)){
@@ -74,16 +75,12 @@ public class MyGdxGame extends ApplicationAdapter {
 			count = 0;
 		} else if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
 			currentFrame = player.attackAnimation.getKeyFrame(stateTime, true);
-
 			count++;
-			int countfps = count / 3;
-			if(playerHitbox.overlaps(skeletonHitbox) && (countfps % 26 == 3
-					|| countfps % 26 == 11
-					|| countfps % 26 == 18 )){
+			if(playerHitbox.overlaps(skeletonHitbox) && (count % 78 == 12
+					|| count % 78 == 33
+					|| count % 78 == 54 )){
 				skeleton.hp -= player.attack;
 				skeletonFrame = skeleton.takeHitAnimation.getKeyFrame(stateTime, true);
-			} else{
-
 			}
 		} else if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
 			currentFrame = player.slideAnimation.getKeyFrame(stateTime, true);
@@ -97,8 +94,14 @@ public class MyGdxGame extends ApplicationAdapter {
 			currentFrame = player.idleAnimation.getKeyFrame(stateTime, true);
 			count = 0;
 		}
+		if(skeleton.hp >= 0){
+			if(skeleton.deathAnimation.isAnimationFinished(stateTime)){
+
+			} else {
+				skeletonFrame = skeleton.deathAnimation.getKeyFrame(stateTime);
+			}
+		}
 		if(flip){
-			// CHANGE USING - tommorowt
 			playerHitbox.setPosition(playerX - 44.5f ,playerY+ 99.75f);
 		}else {
 			playerHitbox.setPosition(playerX + 104.5f ,playerY+ 99.75f);
@@ -106,7 +109,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch.begin();
 		batch.draw(img, 0, 0);
 		if(flip){
-			batch.draw(rekt, playerX - 44.5f,playerY + 99.75f, 204.25f,152);
+			batch.draw(rekt, playerX + 149, playerY+ 99.75f, -204.25f,152);
 		} else{
 			batch.draw(rekt, playerX + 104.5f,playerY + 99.75f, 204.25f,152);
 		}
