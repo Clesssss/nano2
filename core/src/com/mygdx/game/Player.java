@@ -12,6 +12,11 @@ public class Player extends Character{
     Animation<TextureRegion> slideAnimation;
     public Player(int hp, int attack) {
         super(hp, attack);
+        walk();
+        slide();
+        attack();
+        idle();
+
     }
     void walk(){
         Texture walkSheet = new Texture("itch run-Sheet sheet.png");
