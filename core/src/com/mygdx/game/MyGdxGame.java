@@ -89,7 +89,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private void spawnSkeleton(){
 		Skeleton skeleton = new Skeleton(500,10);
 		//not fixed
-		skeleton.setPosX(MathUtils.random(-240,2400));
+		skeleton.setPosX(MathUtils.random(-240,2360));
 		skeleton.setPosY(0);
 		Rectangle hitbox = new Rectangle(skeleton.getPosX()+ 240, 196,180,204);
 		skeleton.setHitbox(hitbox);
