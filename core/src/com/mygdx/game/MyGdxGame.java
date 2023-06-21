@@ -24,7 +24,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	private float playerX;
 	private float playerY;
 	private Array<Skeleton> skeletons;
+	private Array<Mushroom> mushrooms;
 	private long lastSpawnTimeSkeleton = 0;
+	private long lastSpawnTimeMushroom = 0;
 	private FitViewport fitViewport;
 	private boolean flip = false;
 	Rectangle playerHitbox;
@@ -52,7 +54,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		img = new Texture("download.png");
 		stateTime = 0f;
 		skeletons = new Array<Skeleton>();
-
+		mushrooms = new Array<Mushroom>();
 	}
 	private void spawnSkeleton(){
 
@@ -64,6 +66,16 @@ public class MyGdxGame extends ApplicationAdapter {
 		skeleton.setHitbox(hitbox);
 		skeletons.add(skeleton);
 		lastSpawnTimeSkeleton = TimeUtils.nanoTime();
+	}
+
+	private void spawnMushroom(){
+		Mushroom mushroom = new Mushroom(500,10);
+		mushroom.setX(MathUtils.random(-240,2400));
+		mushroom.setY(0);
+		java.awt.Rectangle hitbox = new java.awt.Rectangle(mushroom.getX()+ 240, 196,180,204);
+		mushroom.setmHitArea(hitbox);
+		mushrooms.add(mushroom);
+		lastSpawnTimeMushroom = TimeUtils.nanoTime();
 	}
 
 	@Override
