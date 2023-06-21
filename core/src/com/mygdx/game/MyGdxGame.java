@@ -25,8 +25,10 @@ public class MyGdxGame extends ApplicationAdapter {
 	private float playerY;
 	private Array<Skeleton> skeletons;
 	private Array<Goblin> goblins;
+	private Array<>
 	private long lastSpawnTimeSkeleton = 0;
 	private long lastspawnTimegoblin = 0;
+	private long lastSpawnTimeMushroom =0;
 	private FitViewport fitViewport;
 	private boolean flip = false;
 	Rectangle playerHitbox;
@@ -61,7 +63,6 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	}
 	private void spawnSkeleton(){
-
 		Skeleton skeleton = new Skeleton(500,10);
 		//not fixed
 		skeleton.setPosX(MathUtils.random(-240,2400));
@@ -81,6 +82,16 @@ public class MyGdxGame extends ApplicationAdapter {
 		goblin.setHitbox(hitbox);
 		goblins.add(goblin);
 		lastSpawnTimeSkeleton = TimeUtils.nanoTime();
+	}
+	private void spawnMushroom(){
+		Mushroom mushroom = new Skeleton(500,10);
+		//not fixed
+		mushroom.setPosX(MathUtils.random(-240,2400));
+		mushroom.setPosY(0);
+		Rectangle hitbox = new Rectangle(mushroom.getPosX()+ 240, 196,180,204);
+		mushroom.setHitbox(hitbox);
+		mushroom.add(mushroom);
+		lastSpawnTimeMushroom = TimeUtils.nanoTime();
 	}
 	@Override
 	public void render () {
