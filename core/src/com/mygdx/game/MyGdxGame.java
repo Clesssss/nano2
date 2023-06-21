@@ -24,14 +24,18 @@ public class MyGdxGame extends ApplicationAdapter {
 	private float playerX;
 	private float playerY;
 	private Array<Skeleton> skeletons;
+	private Array<FlyingEye> flyingeyes;
 	private long lastSpawnTimeSkeleton = 0;
+	private long lastSpawnTimeFlyingEye = 0;
 	private FitViewport fitViewport;
 	private boolean flip = false;
 	Rectangle playerHitbox;
 	Rectangle skeletonHitbox;
+	Rectangle flyingEyeHitbox;
 	int count;
 	Player player;
 	Skeleton skeleton;
+	FlyingEye flyingeye;
 
 	// A variable for tracking elapsed time for the animation
 	float stateTime;
@@ -48,10 +52,12 @@ public class MyGdxGame extends ApplicationAdapter {
 		playerY = 90;
 		playerHitbox = new Rectangle(playerX + 104.5f ,playerY + 99.75f, 204.25f,152);
 		skeletonHitbox = new Rectangle(800 + 240,0 + 196,180,204);
+		flyingEyeHitbox = new Rectangle(800 + 240, 0 + 196,180,240);
 		rekt = new Texture("Untitled (1).png");
 		img = new Texture("download.png");
 		stateTime = 0f;
 		skeletons = new Array<Skeleton>();
+		flyingeyes = new Array<FlyingEye>();
 
 	}
 	private void spawnSkeleton(){
@@ -66,6 +72,18 @@ public class MyGdxGame extends ApplicationAdapter {
 		lastSpawnTimeSkeleton = TimeUtils.nanoTime();
 	}
 
+	private void spawnFlyingEye(){
+
+		FlyingEye flyingEye = new FlyingEye(500,10);
+		//not fixed
+		flyingEye.setPosX(MathUtils.random(-240,2400));
+		flyingEye.setPosY(10);
+		Rectangle hitbox = new Rectangle(flyingEye.getPosX()+ 240, 196,180,204);
+		flyingEye.setHitbox(hitbox);
+		flyingeyes.add(flyingeye);
+		lastSpawnTimeFlyingEye = TimeUtils.nanoTime();
+	}
+
 	@Override
 	public void render () {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Clear screen
@@ -76,6 +94,11 @@ public class MyGdxGame extends ApplicationAdapter {
 			spawnSkeleton();
 		}
 		System.out.println(skeletons.size);
+
+		if (TimeUtils.nanoTime() - lastSpawnTimeFlyingEye > 10000000000L){
+			spawnFlyingEye();
+		}
+		System.out.println(flyingeyes.size);
 
 		if(Gdx.input.isKeyPressed(Input.Keys.A)){
 			flip = true;
@@ -97,6 +120,15 @@ public class MyGdxGame extends ApplicationAdapter {
 					skeleton.setTakeHit(true);
 					player.attack(skeleton);
 					skeleton.hp -= player.attack;
+				}
+			}
+			for(FlyingEye fl : flyingeyes){
+				if(playerHitbox.overlaps(fl.getHitbox()) && (count % 78 == 12
+						|| count % 78 == 33
+						|| count % 78 == 54 )){
+					fl.setTakeHit(true);
+					player.attack(skeleton);
+					fl.hp -= player.attack;
 				}
 			}
 		} else if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
@@ -136,6 +168,27 @@ public class MyGdxGame extends ApplicationAdapter {
 				skeleton.setCurrentFrame(skeleton.idleAnimation.getKeyFrame(skeleton.getStateTime(),true));
 			}
 			batch.draw(skeleton.getCurrentFrame(), skeleton.getPosX(), skeleton.getPosY(), 600, 600);
+
+		}
+
+		for (Iterator<FlyingEye> iter = flyingeyes.iterator(); iter.hasNext();){
+			FlyingEye fl2 = iter.next();
+			batch.draw(rekt, fl2.getPosX()+ 240, 196,180,204);
+			if(fl2.hp <= 0){
+				fl2.updateDeath(Gdx.graphics.getDeltaTime());
+				if (fl2.isDeathFinished()) {
+					iter.remove();
+				} else {
+					fl2.setCurrentFrame(fl2.deathAnimation.getKeyFrame(fl2.getDeathStateTime(),true));
+				}
+			} else if(fl2.isTakeHit()){
+				fl2.setCurrentFrame(fl2.takeHitAnimation.getKeyFrame(fl2.getTakeHitStateTime(),true));
+				fl2.setTakeHit(false);
+			}else {
+				fl2.update(Gdx.graphics.getDeltaTime());
+				fl2.setCurrentFrame(fl2.flightAnimation.getKeyFrame(fl2.getStateTime(),true));
+			}
+			batch.draw(fl2.getCurrentFrame(), fl2.getPosX(),fl2.getPosY(), 600, 600);
 
 		}
 		if(flip){
