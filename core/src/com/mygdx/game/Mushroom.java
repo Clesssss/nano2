@@ -109,7 +109,7 @@ public class Mushroom extends Character{
         return mHitArea;
     }
     public void update(float deltaTime){
-        mDeathTime += deltaTime;
+        mSTime += deltaTime;
     }
     public void updateDeath(float deltaTime){
         mDeathTime += deltaTime;
@@ -120,6 +120,30 @@ public class Mushroom extends Character{
     }
     public boolean isDeathFinished(){
         return mDeadAnimation.isAnimationFinished(mDeathTime);
+    }
+
+    public Animation<TextureRegion> getmIdleAnimation() {
+        return mIdleAnimation;
+    }
+
+    public void setmIdleAnimation(Animation<TextureRegion> mIdleAnimation) {
+        this.mIdleAnimation = mIdleAnimation;
+    }
+
+    public Animation<TextureRegion> getmDeadAnimation() {
+        return mDeadAnimation;
+    }
+
+    public void setmDeadAnimation(Animation<TextureRegion> mDeadAnimation) {
+        this.mDeadAnimation = mDeadAnimation;
+    }
+
+    public Animation<TextureRegion> getmIsHitAnimation() {
+        return mIsHitAnimation;
+    }
+
+    public void setmIsHitAnimation(Animation<TextureRegion> mIsHitAnimation) {
+        this.mIsHitAnimation = mIsHitAnimation;
     }
 
     public void idling(){
@@ -145,7 +169,7 @@ public class Mushroom extends Character{
                 deadFrame[index++] = tmpdead[i][j];
             }
         }
-        mDeadAnimation = new Animation<>(0.02f,deadFrame);
+        mDeadAnimation = new Animation<>(0.2f,deadFrame);
     }
     public void takeHit(){
         int index=0;
