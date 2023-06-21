@@ -21,7 +21,6 @@ import java.util.Iterator;
 public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
-	Texture rekt;
 	private OrthographicCamera camera;
 	private float playerX;
 	private float playerY;
@@ -74,7 +73,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		playerX = 195;
 		playerY = 90;
 		playerHitbox = new Rectangle(playerX + 104.5f ,playerY + 99.75f, 204.25f,152);
-		rekt = new Texture("Untitled (1).png");
 		img = new Texture("download.png");
 		stateTime = 0f;
 		skeletons = new Array<Skeleton>();
@@ -216,7 +214,6 @@ public class MyGdxGame extends ApplicationAdapter {
 			batch.draw(img, 0, 0);
 			for (Iterator<Skeleton> iter = skeletons.iterator(); iter.hasNext();){
 				Skeleton skeleton = iter.next();
-				batch.draw(rekt, skeleton.getPosX()+ 240, 196,128,204);
 				if(skeleton.hp <= 0){
 					skeleton.updateDeath(Gdx.graphics.getDeltaTime());
 					if (skeleton.isDeathFinished()) {
@@ -237,7 +234,6 @@ public class MyGdxGame extends ApplicationAdapter {
 
 			for (Iterator<FlyingEye> iter = flyingeyes.iterator(); iter.hasNext();){
 				FlyingEye fl2 = iter.next();
-				batch.draw(rekt, fl2.getPosX()+ 236, 196,160,204);
 				if(fl2.hp <= 0){
 					fl2.updateDeath(Gdx.graphics.getDeltaTime());
 					if (fl2.isDeathFinished()) {
@@ -257,7 +253,6 @@ public class MyGdxGame extends ApplicationAdapter {
 			}
 			for (Iterator<Goblin> iter = goblins.iterator(); iter.hasNext();){
 				Goblin goblin1 = iter.next();
-				batch.draw(rekt, goblin1.getPosX()+ 236, 196,124,204);
 				if(goblin1.hp <= 0){
 					goblin1.updateDeath(Gdx.graphics.getDeltaTime());
 					if (goblin1.isDeathFinished()) {
@@ -277,7 +272,6 @@ public class MyGdxGame extends ApplicationAdapter {
 			}
 			for (Iterator<Mushroom> iter = mushrooms.iterator(); iter.hasNext();){
 				Mushroom m1 = iter.next();
-				batch.draw(rekt, m1.getX()+ 252, 196,100,204);
 				if(m1.hp <= 0){
 					m1.updateDeath(Gdx.graphics.getDeltaTime());
 					if (m1.isDeathFinished()) {
@@ -294,11 +288,6 @@ public class MyGdxGame extends ApplicationAdapter {
 				}
 				batch.draw(m1.getmCurrFrame(), m1.getX(), m1.getY(), 600, 600);
 
-			}
-			if(flip){
-				batch.draw(rekt, playerX -22.14f, playerY+ 99.75f, 166.25f,185.25f);
-			} else{
-				batch.draw(rekt, playerX + 118.75f,playerY + 99.75f, 166.25f,185.25f);
 			}
 			if(flip && playerX <= -90){
 				playerX = -90;
