@@ -24,11 +24,14 @@ public class MyGdxGame extends ApplicationAdapter {
 	private float playerX;
 	private float playerY;
 	private Array<Skeleton> skeletons;
+	private Array<Goblin> goblins;
 	private long lastSpawnTimeSkeleton = 0;
+	private long lastSpawnTimeGoblin = 0;
 	private FitViewport fitViewport;
 	private boolean flip = false;
 	Rectangle playerHitbox;
 	Rectangle skeletonHitbox;
+	Rectangle goblinHitbox;
 	int count;
 	Player player;
 	Skeleton skeleton;
@@ -48,10 +51,12 @@ public class MyGdxGame extends ApplicationAdapter {
 		playerY = 90;
 		playerHitbox = new Rectangle(playerX + 104.5f ,playerY + 99.75f, 204.25f,152);
 		skeletonHitbox = new Rectangle(800 + 240,0 + 196,180,204);
+		goblinHitbox = new Rectangle(800 + 240,0 + 196,180,204);
 		rekt = new Texture("Untitled (1).png");
 		img = new Texture("download.png");
 		stateTime = 0f;
 		skeletons = new Array<Skeleton>();
+		goblins = new Array<Goblin>();
 
 	}
 	private void spawnSkeleton(){
@@ -65,6 +70,15 @@ public class MyGdxGame extends ApplicationAdapter {
 		skeletons.add(skeleton);
 		lastSpawnTimeSkeleton = TimeUtils.nanoTime();
 	}
+	private void spawnGoblin(){
+		Goblin goblin = new Goblin(700,20);
+		goblin.setPosX(MathUtils.random(-240,2400));
+		goblin.setPosY(0);
+		Rectangle hitboxs = new Rectangle(goblin.getPosX() + 240, 196,180,204);
+		goblin.setHitbox(hitboxs);
+		goblins.add(goblin);
+		lastSpawnTimeGoblin = TimeUtils.nanoTime();
+	}
 
 	@Override
 	public void render () {
@@ -76,6 +90,10 @@ public class MyGdxGame extends ApplicationAdapter {
 			spawnSkeleton();
 		}
 		System.out.println(skeletons.size);
+		if(TimeUtils.nanoTime() - lastSpawnTimeGoblin > 10000000000L){
+			spawnGoblin();
+		}
+		System.out.print(goblins.size);
 
 		if(Gdx.input.isKeyPressed(Input.Keys.A)){
 			flip = true;
@@ -97,6 +115,15 @@ public class MyGdxGame extends ApplicationAdapter {
 					skeleton.setTakeHit(true);
 					player.attack(skeleton);
 					skeleton.hp -= player.attack;
+				}
+			}
+			for(Goblin goblin : goblins){
+				if(playerHitbox.overlaps(goblin.getHitbox()) && (count % 78 == 12
+						|| count % 78 == 33
+						|| count % 78 == 54 )){
+					goblin.setTakeHit(true);
+					player.attack(goblin);
+					goblin.hp -= player.attack;
 				}
 			}
 		} else if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
@@ -136,7 +163,26 @@ public class MyGdxGame extends ApplicationAdapter {
 				skeleton.setCurrentFrame(skeleton.idleAnimation.getKeyFrame(skeleton.getStateTime(),true));
 			}
 			batch.draw(skeleton.getCurrentFrame(), skeleton.getPosX(), skeleton.getPosY(), 600, 600);
+		}
 
+		for (Iterator<Goblin> iter = goblins.iterator(); iter.hasNext();){
+			Goblin goblin = iter.next();
+			batch.draw(rekt, goblin.getPosX()+ 240, 196,180,204);
+			if(goblin.hp <= 0){
+				goblin.updateDeath(Gdx.graphics.getDeltaTime());
+				if (goblin.isDeathFinished()) {
+					iter.remove();
+				} else {
+					goblin.setCurrentFrame(goblin.deathAnimation.getKeyFrame(goblin.getDeathStateTime(),true));
+				}
+			} else if(goblin.isTakeHit()){
+				goblin.setCurrentFrame(goblin.takeHitAnimation.getKeyFrame(goblin.getTakeHitStateTime(),true));
+				goblin.setTakeHit(false);
+			}else {
+				goblin.update(Gdx.graphics.getDeltaTime());
+				goblin.setCurrentFrame(goblin.idleAnimation.getKeyFrame(goblin.getStateTime(),true));
+			}
+			batch.draw(goblin.getCurrentFrame(),goblin.getPosX(), goblin.getPosY(), 600, 600);
 		}
 		if(flip){
 			batch.draw(rekt, playerX -22.14f, playerY+ 99.75f, 166.25f,185.25f);
