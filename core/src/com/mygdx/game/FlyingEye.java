@@ -100,7 +100,7 @@ public class FlyingEye extends Character{
         return deathAnimation.isAnimationFinished(deathStateTime);
     }
     void flight(){
-        Texture flightSheet = new Texture("Flight.png");
+        Texture flightSheet = new Texture("Monsters_Creatures_Fantasy/Flying eye/Flight.png");
         TextureRegion[][] tmpFlight = TextureRegion.split(flightSheet,
                 flightSheet.getWidth()/ 4,
                 flightSheet.getHeight());
