@@ -102,19 +102,19 @@ public class FlyingEye extends Character{
     void flight(){
         Texture flightSheet = new Texture("Monsters_Creatures_Fantasy/Flying eye/Flight.png");
         TextureRegion[][] tmpFlight = TextureRegion.split(flightSheet,
-                flightSheet.getWidth()/ 4,
+                flightSheet.getWidth()/ 8,
                 flightSheet.getHeight());
-        TextureRegion[] flightFrames = new TextureRegion[4];
+        TextureRegion[] flightFrames = new TextureRegion[8];
         int index = 0;
         for (int i = 0; i < 1; i++) {
-            for (int j = 0; j < 4; j++) {
+            for (int j = 0; j < 8; j++) {
                 flightFrames[index++] = tmpFlight[i][j];
             }
         }
         flightAnimation = new Animation<TextureRegion>(0.05f, flightFrames);
     }
     void death(){
-        Texture deathSheet = new Texture("DeathS.png");
+        Texture deathSheet = new Texture("Monsters_Creatures_Fantasy/Flying eye/Death.png");
         TextureRegion[][] tmpDeath = TextureRegion.split(deathSheet,
                 deathSheet.getWidth()/4,
                 deathSheet.getHeight());
@@ -128,7 +128,7 @@ public class FlyingEye extends Character{
         deathAnimation = new Animation<TextureRegion>(0.2f, deathFrames);
     }
     void takeHit(){
-        Texture takeHitSheet = new Texture("Take HitS.png");
+        Texture takeHitSheet = new Texture("Monsters_Creatures_Fantasy/Flying eye/Take Hit2.png");
         TextureRegion[][] tmpTakeHit = TextureRegion.split(takeHitSheet,
                 takeHitSheet.getWidth(),
                 takeHitSheet.getHeight());

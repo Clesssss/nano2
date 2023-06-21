@@ -32,8 +32,6 @@ public class MyGdxGame extends ApplicationAdapter {
 	private FitViewport fitViewport;
 	private boolean flip = false;
 	Rectangle playerHitbox;
-	Rectangle skeletonHitbox;
-	Rectangle flyingEyeHitbox;
 	int count;
 	Player player;
 	Skeleton skeleton;
@@ -54,8 +52,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		playerX = 195;
 		playerY = 90;
 		playerHitbox = new Rectangle(playerX + 104.5f ,playerY + 99.75f, 204.25f,152);
-		skeletonHitbox = new Rectangle(800 + 240,0 + 196,180,204);
-		flyingEyeHitbox = new Rectangle(800 + 240, 0 + 196,180,240);
 		rekt = new Texture("Untitled (1).png");
 		img = new Texture("download.png");
 		stateTime = 0f;
@@ -79,10 +75,10 @@ public class MyGdxGame extends ApplicationAdapter {
 		FlyingEye flyingEye = new FlyingEye(500,10);
 		//not fixed
 		flyingEye.setPosX(MathUtils.random(-240,2400));
-		flyingEye.(10);
+		flyingEye.setPosY(10);
 		Rectangle hitbox = new Rectangle(flyingEye.getPosX()+ 240, 196,180,204);
 		flyingEye.setHitbox(hitbox);
-		flyingeyes.add(flyingeye);
+		flyingeyes.add(flyingEye);
 		lastSpawnTimeFlyingEye = TimeUtils.nanoTime();
 	}
 	private void spawnMushroom(){
@@ -104,8 +100,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		if (TimeUtils.nanoTime() - lastSpawnTimeSkeleton > 10000000000L){
 			spawnSkeleton();
 		}
-		System.out.println(skeletons.size);
-
 		if (TimeUtils.nanoTime() - lastSpawnTimeFlyingEye > 10000000000L){
 			spawnFlyingEye();
 		}
@@ -138,10 +132,11 @@ public class MyGdxGame extends ApplicationAdapter {
 						|| count % 78 == 33
 						|| count % 78 == 54 )){
 					fl.setTakeHit(true);
-					player.attack(skeleton);
+					player.attack(fl);
 					fl.hp -= player.attack;
 				}
 			}
+
 		} else if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
 			currentFrame = player.slideAnimation.getKeyFrame(stateTime, true);
 			if(flip){
@@ -181,7 +176,6 @@ public class MyGdxGame extends ApplicationAdapter {
 			batch.draw(skeleton.getCurrentFrame(), skeleton.getPosX(), skeleton.getPosY(), 600, 600);
 
 		}
-
 		for (Iterator<FlyingEye> iter = flyingeyes.iterator(); iter.hasNext();){
 			FlyingEye fl2 = iter.next();
 			batch.draw(rekt, fl2.getPosX()+ 240, 196,180,204);
