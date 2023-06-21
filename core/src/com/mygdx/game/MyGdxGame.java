@@ -25,7 +25,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private float playerY;
 	private Array<Skeleton> skeletons;
 	private Array<FlyingEye> flyingeyes;
-	private Array<>
+	private Array<Mushroom> mushrooms;
 	private long lastSpawnTimeSkeleton = 0;
 	private long lastSpawnTimeFlyingEye = 0;
 	private long lastSpawnTimeMushroom =0;
@@ -38,6 +38,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	Player player;
 	Skeleton skeleton;
 	FlyingEye flyingeye;
+	Mushroom mushroom;
 
 	// A variable for tracking elapsed time for the animation
 	float stateTime;
@@ -78,11 +79,21 @@ public class MyGdxGame extends ApplicationAdapter {
 		FlyingEye flyingEye = new FlyingEye(500,10);
 		//not fixed
 		flyingEye.setPosX(MathUtils.random(-240,2400));
-		flyingEye.setPosY(10);
+		flyingEye.(10);
 		Rectangle hitbox = new Rectangle(flyingEye.getPosX()+ 240, 196,180,204);
 		flyingEye.setHitbox(hitbox);
 		flyingeyes.add(flyingeye);
 		lastSpawnTimeFlyingEye = TimeUtils.nanoTime();
+	}
+	private void spawnMushroom(){
+		Mushroom mushroom = new Mushroom(500,10);
+		//not fixed
+		mushroom.setX(MathUtils.random(-240,2400));
+		mushroom.setY(0);
+		java.awt.Rectangle hitbox = new java.awt.Rectangle(mushroom.getX()+ 240, 196,180,204);
+		mushroom.setmHitArea(hitbox);
+		mushrooms.add(mushroom);
+		lastSpawnTimeMushroom = TimeUtils.nanoTime();
 	}
 	@Override
 	public void render () {
