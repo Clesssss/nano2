@@ -137,7 +137,7 @@ public class Mushroom extends Character{
 
     public void died(){
         int index=0;
-        Texture deadSheet = new Texture("Monsters_Creatures_Fantasy/Goblin/Death.png");
+        Texture deadSheet = new Texture("Monsters_Creatures_Fantasy/Mushroom/Death.png");
         TextureRegion[][] tmpdead = TextureRegion.split(deadSheet, deadSheet.getWidth()/4, deadSheet.getHeight());
         TextureRegion[] deadFrame = new TextureRegion[4];
         for (int i=0;i<1;i++){
@@ -149,7 +149,7 @@ public class Mushroom extends Character{
     }
     public void takeHit(){
         int index=0;
-        Texture hitSheet = new Texture("Monsters_Creatures_Fantasy/Goblin/Take Hit.png");
+        Texture hitSheet = new Texture("Monsters_Creatures_Fantasy/Mushroom/Take Hit.png");
         TextureRegion[][] tmphit = TextureRegion.split(hitSheet, hitSheet.getWidth()/4, hitSheet.getHeight());
         TextureRegion[] hitFrame = new TextureRegion[4];
         for (int i=0;i<1;i++){

@@ -195,6 +195,15 @@ public class MyGdxGame extends ApplicationAdapter {
 						fl.hp -= player.attack;
 					}
 				}
+				for(Mushroom mushroom1 : mushrooms){
+					if(playerHitbox.overlaps(mushroom1.getmHitArea()) && (count % 78 == 12
+							|| count % 78 == 33
+							|| count % 78 == 54 )){
+						mushroom1.setmIsHit(true);
+						player.attack(mushroom1);
+						mushroom1.hp -= player.attack;
+					}
+				}
 			} else if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
 				currentFrame = player.slideAnimation.getKeyFrame(stateTime, true);
 				if(flip){
@@ -273,6 +282,26 @@ public class MyGdxGame extends ApplicationAdapter {
 					goblin1.setCurrentFrame(goblin1.idleAnimation.getKeyFrame(goblin1.getStateTime(),true));
 				}
 				batch.draw(goblin1.getCurrentFrame(), goblin1.getPosX(), goblin1.getPosY(), 600, 600);
+
+			}
+			for (Iterator<Mushroom> iter = mushrooms.iterator(); iter.hasNext();){
+				Mushroom m1 = iter.next();
+				batch.draw(rekt, m1.getX()+ 240, 196,180,204);
+				if(m1.hp <= 0){
+					m1.updateDeath(Gdx.graphics.getDeltaTime());
+					if (m1.isDeathFinished()) {
+						iter.remove();
+					} else {
+						m1.setmCurrFrame(m1.mDeadAnimation.getKeyFrame(m1.getmDeathTime(),true));
+					}
+				} else if(m1.ismIsHit()){
+					m1.setmCurrFrame(m1.mIsHitAnimation.getKeyFrame(m1.getmIsHitTime(),true));
+					m1.setmIsHit(false);
+				}else {
+					m1.update(Gdx.graphics.getDeltaTime());
+					m1.setmCurrFrame(m1.mIdleAnimation.getKeyFrame(m1.getmSTime(),true));
+				}
+				batch.draw(m1.getmCurrFrame(), m1.getX(), m1.getY(), 600, 600);
 
 			}
 			if(flip){
