@@ -155,7 +155,7 @@ public class Goblin extends Character{
                 idleFrames[index++] = tmpIdle[i][j];
             }
         }
-        idleAnimation = new Animation<TextureRegion>(0.05f, idleFrames);
+        idleAnimation = new Animation<TextureRegion>(0.1f, idleFrames);
     }
     void death(){
         Texture deathSheet = new Texture("Monsters_Creatures_Fantasy/Goblin/Death.png");
@@ -172,14 +172,14 @@ public class Goblin extends Character{
         deathAnimation = new Animation<TextureRegion>(0.2f, deathFrames);
     }
     void takeHit(){
-        Texture takeHitSheet = new Texture("Monsters_Creatures_Fantasy/Goblin/Take Hit.png");
+        Texture takeHitSheet = new Texture("Monsters_Creatures_Fantasy/Goblin/Take Hit2.png");
         TextureRegion[][] tmpTakeHit = TextureRegion.split(takeHitSheet,
-                takeHitSheet.getWidth()/2,
+                takeHitSheet.getWidth(),
                 takeHitSheet.getHeight());
-        TextureRegion[] takeHitFrames = new TextureRegion[2];
+        TextureRegion[] takeHitFrames = new TextureRegion[1];
         int index = 0;
         for (int i = 0; i < 1; i++) {
-            for (int j = 0; j < 2; j++) {
+            for (int j = 0; j < 1; j++) {
                 takeHitFrames[index++] = tmpTakeHit[i][j];
             }
         }

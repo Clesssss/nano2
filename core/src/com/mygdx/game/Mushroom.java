@@ -156,7 +156,7 @@ public class Mushroom extends Character{
                 idleFrame[index++] = tmpIdle[i][j];
             }
         }
-        mIdleAnimation = new Animation<>(0.05f,idleFrame);
+        mIdleAnimation = new Animation<>(0.1f,idleFrame);
     }
 
     public void died(){
@@ -173,11 +173,11 @@ public class Mushroom extends Character{
     }
     public void takeHit(){
         int index=0;
-        Texture hitSheet = new Texture("Monsters_Creatures_Fantasy/Mushroom/Take Hit.png");
-        TextureRegion[][] tmphit = TextureRegion.split(hitSheet, hitSheet.getWidth()/4, hitSheet.getHeight());
-        TextureRegion[] hitFrame = new TextureRegion[4];
+        Texture hitSheet = new Texture("Monsters_Creatures_Fantasy/Mushroom/Take Hit2.png");
+        TextureRegion[][] tmphit = TextureRegion.split(hitSheet, hitSheet.getWidth(), hitSheet.getHeight());
+        TextureRegion[] hitFrame = new TextureRegion[1];
         for (int i=0;i<1;i++){
-            for (int j=0;j<4;j++){
+            for (int j=0;j<1;j++){
                 hitFrame[index++] = tmphit[i][j];
             }
         }
