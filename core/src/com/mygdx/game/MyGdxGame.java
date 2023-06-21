@@ -106,7 +106,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		//not fixed
 		mushroom.setX(MathUtils.random(-240,2400));
 		mushroom.setY(0);
-		java.awt.Rectangle hitbox = new java.awt.Rectangle(mushroom.getX()+ 240, 196,180,204);
+		Rectangle hitbox = new Rectangle(mushroom.getX()+ 240, 196,180,204);
 		mushroom.setmHitArea(hitbox);
 		mushrooms.add(mushroom);
 		lastSpawnTimeMushroom = TimeUtils.nanoTime();
@@ -175,6 +175,15 @@ public class MyGdxGame extends ApplicationAdapter {
 					fl.setTakeHit(true);
 					player.attack(fl);
 					fl.hp -= player.attack;
+				}
+			}
+			for(Mushroom mushroom1 : mushrooms){
+				if(playerHitbox.overlaps(mushroom1.getmHitArea()) && (count % 78 == 12
+						|| count % 78 == 33
+						|| count % 78 == 54 )){
+					skeleton.setTakeHit(true);
+					player.attack(skeleton);
+					skeleton.hp -= player.attack;
 				}
 			}
 		} else if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){

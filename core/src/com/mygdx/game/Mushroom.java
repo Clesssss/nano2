@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 
 import java.awt.*;
 
@@ -19,7 +20,7 @@ public class Mushroom extends Character{
     private float mSTime;
     private int x;
     private int y;
-    private Rectangle mHitArea;
+    private com.badlogic.gdx.math.Rectangle mHitArea;
 
     public Mushroom(int hp,int attck){
         super(hp,attck);
