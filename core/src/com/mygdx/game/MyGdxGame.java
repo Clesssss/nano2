@@ -119,10 +119,10 @@ public class MyGdxGame extends ApplicationAdapter {
 	private void spawnMushroom(){
 		Mushroom mushroom = new Mushroom(500,10);
 		//not fixed
-		mushroom.setX(MathUtils.random(-240,2400));
-		mushroom.setY(0);
-		Rectangle hitbox = new Rectangle(mushroom.getX()+ 240, 196,180,204);
-		mushroom.setmHitArea(hitbox);
+		mushroom.setPosX(MathUtils.random(-240,2400));
+		mushroom.setPosY(0);
+		Rectangle hitbox = new Rectangle(mushroom.getPosX()+ 240, 196,180,204);
+		mushroom.setHitbox(hitbox);
 		mushrooms.add(mushroom);
 		lastSpawnTimeMushroom = TimeUtils.nanoTime();
 	}
@@ -191,6 +191,15 @@ public class MyGdxGame extends ApplicationAdapter {
 						fl.setTakeHit(true);
 						player.attack(fl);
 						fl.hp -= player.attack;
+					}
+				}
+				for(Mushroom m : mushrooms){
+					if(playerHitbox.overlaps(m.getHitbox()) && (count % 78 == 12
+							|| count % 78 == 33
+							|| count % 78 == 54 )){
+						m.setTakeHit(true);
+						player.attack(m);
+						m.hp -= player.attack;
 					}
 				}
 			} else if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
@@ -271,6 +280,26 @@ public class MyGdxGame extends ApplicationAdapter {
 					goblin1.setCurrentFrame(goblin1.idleAnimation.getKeyFrame(goblin1.getStateTime(),true));
 				}
 				batch.draw(goblin1.getCurrentFrame(), goblin1.getPosX(), goblin1.getPosY(), 600, 600);
+
+			}
+			for (Iterator<Mushroom> iter = mushrooms.iterator(); iter.hasNext();){
+				Mushroom mushroom1 = iter.next();
+				batch.draw(rekt, mushroom1.getPosX()+ 240, 196,180,204);
+				if(mushroom1.hp <= 0){
+					mushroom1.updateDeath(Gdx.graphics.getDeltaTime());
+					if (mushroom1.isDeathFinished()) {
+						iter.remove();
+					} else {
+						mushroom1.setCurrentFrame(mushroom1.deathAnimation.getKeyFrame(mushroom1.getDeathStateTime(),true));
+					}
+				} else if(mushroom1.isTakeHit()){
+					mushroom1.setCurrentFrame(mushroom1.takeHitAnimation.getKeyFrame(mushroom1.getTakeHitStateTime(),true));
+					mushroom1.setTakeHit(false);
+				}else {
+					mushroom1.update(Gdx.graphics.getDeltaTime());
+					mushroom1.setCurrentFrame(mushroom1.idleAnimation.getKeyFrame(mushroom1.getStateTime(),true));
+				}
+				batch.draw(mushroom1.getCurrentFrame(), mushroom1.getPosX(), mushroom1.getPosY(), 600, 600);
 
 			}
 			if(flip){
