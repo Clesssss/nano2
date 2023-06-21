@@ -10,5 +10,4 @@
     <orderEntry type="library" name="Gradle: com.badlogicgames.gdx:gdx:1.11.0" level="project" />
     <orderEntry type="library" name="Gradle: com.badlogicgames.gdx:gdx-jnigen-loader:2.3.1" level="project" />
   </component>
-  <component name="TestModuleProperties" production-module="nano2.core.main" />
 </module>
