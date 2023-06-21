@@ -24,14 +24,18 @@ public class MyGdxGame extends ApplicationAdapter {
 	private float playerX;
 	private float playerY;
 	private Array<Skeleton> skeletons;
+	private Array<Goblin> goblins;
 	private long lastSpawnTimeSkeleton = 0;
+	private long lastspawnTimegoblin = 0;
 	private FitViewport fitViewport;
 	private boolean flip = false;
 	Rectangle playerHitbox;
 	Rectangle skeletonHitbox;
+	Rectangle GoblinHitbox;
 	int count;
 	Player player;
 	Skeleton skeleton;
+	Goblin goblin;
 
 	// A variable for tracking elapsed time for the animation
 	float stateTime;
@@ -48,10 +52,12 @@ public class MyGdxGame extends ApplicationAdapter {
 		playerY = 90;
 		playerHitbox = new Rectangle(playerX + 104.5f ,playerY + 99.75f, 204.25f,152);
 		skeletonHitbox = new Rectangle(800 + 240,0 + 196,180,204);
+		GoblinHitbox = new Rectangle(800 + 240,0 + 196,180,204);
 		rekt = new Texture("Untitled (1).png");
 		img = new Texture("download.png");
 		stateTime = 0f;
 		skeletons = new Array<Skeleton>();
+		goblins = new Array<Goblin>();
 
 	}
 	private void spawnSkeleton(){
@@ -65,7 +71,17 @@ public class MyGdxGame extends ApplicationAdapter {
 		skeletons.add(skeleton);
 		lastSpawnTimeSkeleton = TimeUtils.nanoTime();
 	}
+	private void spawngoblin(){
 
+		Skeleton skeleton = new Skeleton(800,20);
+		//not fixed
+		goblin.setPosX(MathUtils.random(-240,2400));
+		goblin.setPosY(0);
+		Rectangle hitbox = new Rectangle(skeleton.getPosX()+ 240, 196,180,204);
+		goblin.setHitbox(hitbox);
+		goblins.add(goblin);
+		lastSpawnTimeSkeleton = TimeUtils.nanoTime();
+	}
 	@Override
 	public void render () {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Clear screen
@@ -75,7 +91,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		if (TimeUtils.nanoTime() - lastSpawnTimeSkeleton > 10000000000L){
 			spawnSkeleton();
 		}
-		System.out.println(skeletons.size);
+
+		if (TimeUtils.nanoTime() - lastspawnTimegoblin > 10000000000L){
+			spawngoblin();
+		}
+		System.out.println(goblins.size);
 
 		if(Gdx.input.isKeyPressed(Input.Keys.A)){
 			flip = true;
@@ -136,6 +156,27 @@ public class MyGdxGame extends ApplicationAdapter {
 				skeleton.setCurrentFrame(skeleton.idleAnimation.getKeyFrame(skeleton.getStateTime(),true));
 			}
 			batch.draw(skeleton.getCurrentFrame(), skeleton.getPosX(), skeleton.getPosY(), 600, 600);
+
+		}
+
+		for (Iterator<Goblin> iter = goblins.iterator(); iter.hasNext();){
+			Goblin goblin1 = iter.next();
+			batch.draw(rekt, goblin1.getPosX()+ 240, 196,180,204);
+			if(goblin1.hp <= 0){
+				goblin1.updateDeath(Gdx.graphics.getDeltaTime());
+				if (goblin1.isDeathFinished()) {
+					iter.remove();
+				} else {
+					goblin1.setCurrentFrame(goblin1.deathAnimation.getKeyFrame(goblin1.getDeathStateTime(),true));
+				}
+			} else if(goblin1.isTakeHit()){
+				goblin1.setCurrentFrame(goblin1.takeHitAnimation.getKeyFrame(goblin1.getTakeHitStateTime(),true));
+				goblin1.setTakeHit(false);
+			}else {
+				goblin1.update(Gdx.graphics.getDeltaTime());
+				goblin.setCurrentFrame(goblin1.idleAnimation.getKeyFrame(goblin1.getStateTime(),true));
+			}
+			batch.draw(goblin1.getCurrentFrame(), goblin1.getPosX(), goblin1.getPosY(), 600, 600);
 
 		}
 		if(flip){
