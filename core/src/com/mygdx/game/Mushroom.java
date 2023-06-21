@@ -7,159 +7,14 @@ import com.badlogic.gdx.math.Rectangle;
 
 import java.awt.*;
 
-public class Mushroom extends Character{
-    Animation<TextureRegion> mIdleAnimation;
-    Animation<TextureRegion> mDeadAnimation;
-    Animation<TextureRegion> mIsHitAnimation;
-    private Animation<TextureRegion>mWalkAnimation;
-    private Animation<TextureRegion> mAtkAnimation;
-    private TextureRegion mCurrFrame;
-    private float mDeathTime;
-    private float mIsHitTime;
-    private boolean mIsHit;
-    private float mSTime;
-    private int x;
-    private int y;
-    private com.badlogic.gdx.math.Rectangle mHitArea;
+public class Mushroom extends Enemy{
 
     public Mushroom(int hp,int attck){
         super(hp,attck);
-        mSTime = 0;
-        mIsHit=false;
-        mIsHitTime=0;
-        mDeathTime=0;
-        idling();
-        died();
-        takeHit();
     }
 
-    public Animation<TextureRegion> getmWalkAnimation() {
-        return mWalkAnimation;
-    }
-
-    public void setmWalkAnimation(Animation<TextureRegion> mWalkAnimation) {
-        this.mWalkAnimation = mWalkAnimation;
-    }
-
-    public Animation<TextureRegion> getmAtkAnimation() {
-        return mAtkAnimation;
-    }
-
-    public void setmAtkAnimation(Animation<TextureRegion> mAtkAnimation) {
-        this.mAtkAnimation = mAtkAnimation;
-    }
-
-    public TextureRegion getmCurrFrame() {
-        return mCurrFrame;
-    }
-
-    public void setmCurrFrame(TextureRegion mCurrFrame) {
-        this.mCurrFrame = mCurrFrame;
-    }
-
-    public float getmDeathTime() {
-        return mDeathTime;
-    }
-
-    public void setmDeathTime(float mDeathTime) {
-        this.mDeathTime = mDeathTime;
-    }
-
-    public float getmIsHitTime() {
-        return mIsHitTime;
-    }
-
-    public void setmIsHitTime(float mIsHitTime) {
-        this.mIsHitTime = mIsHitTime;
-    }
-
-    public boolean ismIsHit() {
-        return mIsHit;
-    }
-
-    public void setmIsHit(boolean mIsHit) {
-        this.mIsHit = mIsHit;
-    }
-
-    public float getmSTime() {
-        return mSTime;
-    }
-
-    public void setmSTime(float mSTime) {
-        this.mSTime = mSTime;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public Rectangle getmHitArea() {
-        return mHitArea;
-    }
-    public void update(float deltaTime){
-        mSTime += deltaTime;
-    }
-    public void updateDeath(float deltaTime){
-        mDeathTime += deltaTime;
-    }
-
-    public void setmHitArea(Rectangle mHitArea) {
-        this.mHitArea = mHitArea;
-    }
-    public boolean isDeathFinished(){
-        return mDeadAnimation.isAnimationFinished(mDeathTime);
-    }
-
-    public Animation<TextureRegion> getmIdleAnimation() {
-        return mIdleAnimation;
-    }
-
-    public void setmIdleAnimation(Animation<TextureRegion> mIdleAnimation) {
-        this.mIdleAnimation = mIdleAnimation;
-    }
-
-    public Animation<TextureRegion> getmDeadAnimation() {
-        return mDeadAnimation;
-    }
-
-    public void setmDeadAnimation(Animation<TextureRegion> mDeadAnimation) {
-        this.mDeadAnimation = mDeadAnimation;
-    }
-
-    public Animation<TextureRegion> getmIsHitAnimation() {
-        return mIsHitAnimation;
-    }
-
-    public void setmIsHitAnimation(Animation<TextureRegion> mIsHitAnimation) {
-        this.mIsHitAnimation = mIsHitAnimation;
-    }
-
-    public void idling(){
-        int index =0;
-        Texture idleSheet = new Texture("Monsters_Creatures_Fantasy/Mushroom/Idle.png");
-        TextureRegion[][] tmpIdle = TextureRegion.split(idleSheet, idleSheet.getWidth()/4, idleSheet.getHeight());
-        TextureRegion[] idleFrame = new TextureRegion[4];
-        for (int i=0;i<1;i++){
-            for (int j=0;j<4;j++){
-                idleFrame[index++] = tmpIdle[i][j];
-            }
-        }
-        mIdleAnimation = new Animation<>(0.1f,idleFrame);
-    }
-
-    public void died(){
+    @Override
+    void death() {
         int index=0;
         Texture deadSheet = new Texture("Monsters_Creatures_Fantasy/Mushroom/Death.png");
         TextureRegion[][] tmpdead = TextureRegion.split(deadSheet, deadSheet.getWidth()/4, deadSheet.getHeight());
@@ -169,9 +24,11 @@ public class Mushroom extends Character{
                 deadFrame[index++] = tmpdead[i][j];
             }
         }
-        mDeadAnimation = new Animation<>(0.2f,deadFrame);
+        deathAnimation = new Animation<>(0.2f,deadFrame);
     }
-    public void takeHit(){
+
+    @Override
+    void takeHit() {
         int index=0;
         Texture hitSheet = new Texture("Monsters_Creatures_Fantasy/Mushroom/Take Hit2.png");
         TextureRegion[][] tmphit = TextureRegion.split(hitSheet, hitSheet.getWidth(), hitSheet.getHeight());
@@ -181,9 +38,32 @@ public class Mushroom extends Character{
                 hitFrame[index++] = tmphit[i][j];
             }
         }
-        mIsHitAnimation = new Animation<>(0.1f,hitFrame);
+        takeHitAnimation = new Animation<>(0.1f,hitFrame);
     }
 
+    @Override
+    void idle() {
+        int index =0;
+        Texture idleSheet = new Texture("Monsters_Creatures_Fantasy/Mushroom/Idle.png");
+        TextureRegion[][] tmpIdle = TextureRegion.split(idleSheet, idleSheet.getWidth()/4, idleSheet.getHeight());
+        TextureRegion[] idleFrame = new TextureRegion[4];
+        for (int i=0;i<1;i++){
+            for (int j=0;j<4;j++){
+                idleFrame[index++] = tmpIdle[i][j];
+            }
+        }
+        idleAnimation = new Animation<>(0.1f,idleFrame);
+    }
+
+    @Override
+    void walk() {
+
+    }
+
+    @Override
+    void attack() {
+
+    }
     @Override
     public void isAttacked(int damage) {
 

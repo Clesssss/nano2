@@ -3,21 +3,27 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Player extends Character{
     private int shield;
-    Animation<TextureRegion> idleAnimation;
-    Animation<TextureRegion> walkAnimation;
-    Animation<TextureRegion> attackAnimation;
-    Animation<TextureRegion> slideAnimation;
+    private Animation<TextureRegion> slideAnimation;
     public Player(int hp, int attack) {
         super(hp, attack);
-        walk();
         slide();
-        attack();
-        idle();
-
+        posX = 195;
+        posY = 90;
+        hitbox = new Rectangle(posX + 104.5f ,posY+ 99.75f, 204.25f,152);
     }
+
+    public Animation<TextureRegion> getSlideAnimation() {
+        return slideAnimation;
+    }
+
+    public void setSlideAnimation(Animation<TextureRegion> slideAnimation) {
+        this.slideAnimation = slideAnimation;
+    }
+
     void walk(){
         Texture walkSheet = new Texture("itch run-Sheet sheet.png");
         TextureRegion[][] tmpWalk = TextureRegion.split(walkSheet,

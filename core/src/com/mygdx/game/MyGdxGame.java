@@ -22,8 +22,6 @@ public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
 	private OrthographicCamera camera;
-	private float playerX;
-	private float playerY;
 	private Array<Skeleton> skeletons;
 	private Array<FlyingEye> flyingeyes;
 	private Array<Mushroom> mushrooms;
@@ -34,7 +32,6 @@ public class MyGdxGame extends ApplicationAdapter {
 	private long lastSpawnTimeMushroom =0;
 	private FitViewport fitViewport;
 	private boolean flip = false;
-	Rectangle playerHitbox;
 	int time;
 	int count;
 	Player player;
@@ -63,16 +60,15 @@ public class MyGdxGame extends ApplicationAdapter {
 				return true;
 			}
 		});
-		font = new BitmapFont();
-		font.getData().setScale(5);
-		player = new Player(300,1);
+
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 2784,1650);
 		fitViewport = new FitViewport(2784,1650,camera);
 		batch = new SpriteBatch();
-		playerX = 195;
-		playerY = 90;
-		playerHitbox = new Rectangle(playerX + 104.5f ,playerY + 99.75f, 204.25f,152);
+		font = new BitmapFont();
+		font.getData().setScale(5);
+		player = new Player(300,1);
+		player.hitbox = new Rectangle(player.posX + 104.5f ,player.posY + 99.75f, 204.25f,152);
 		img = new Texture("download.png");
 		stateTime = 0f;
 		skeletons = new Array<Skeleton>();
@@ -82,43 +78,39 @@ public class MyGdxGame extends ApplicationAdapter {
 	}
 	private void spawnSkeleton(){
 		Skeleton skeleton = new Skeleton(20,10);
-		//not fixed
-		skeleton.setPosX(MathUtils.random(-240,2360));
-		skeleton.setPosY(0);
-		Rectangle hitbox = new Rectangle(skeleton.getPosX()+ 240, 196,128,204);
-		skeleton.setHitbox(hitbox);
+		skeleton.posX = MathUtils.random(-240,2360);
+		skeleton.posY = 0;
+		Rectangle hitbox = new Rectangle(skeleton.posX+ 240, 196,128,204);
+		skeleton.hitbox = hitbox;
 		skeletons.add(skeleton);
 		lastSpawnTimeSkeleton = TimeUtils.nanoTime();
 	}
 	private void spawngoblin(){
 
 		Goblin goblin1 = new Goblin(10,20);
-		//not fixed
-		goblin1.setPosX(MathUtils.random(-240,2400));
-		goblin1.setPosY(0);
-		Rectangle hitbox = new Rectangle(goblin1.getPosX()+ 236, 196,124,204);
-		goblin1.setHitbox(hitbox);
+		goblin1.posX = MathUtils.random(-240,2400);
+		goblin1.posY = 0;
+		Rectangle hitbox = new Rectangle(goblin1.posX+ 236, 196,124,204);
+		goblin1.hitbox = hitbox;
 		goblins.add(goblin1);
 		lastspawnTimegoblin = TimeUtils.nanoTime();
 	}
 	private void spawnFlyingEye(){
 
 		FlyingEye flyingEye = new FlyingEye(5,10);
-		//not fixed
-		flyingEye.setPosX(MathUtils.random(-240,2400));
-		flyingEye.setPosY(10);
-		Rectangle hitbox = new Rectangle(flyingEye.getPosX()+ 236, 196,160,204);
-		flyingEye.setHitbox(hitbox);
+		flyingEye.posX = MathUtils.random(-240,2400);
+		flyingEye.posY = 10;
+		Rectangle hitbox = new Rectangle(flyingEye.posX+ 236, 196,160,204);
+		flyingEye.hitbox = hitbox;
 		flyingeyes.add(flyingEye);
 		lastSpawnTimeFlyingEye = TimeUtils.nanoTime();
 	}
 	private void spawnMushroom(){
 		Mushroom mushroom = new Mushroom(5,10);
-		//not fixed
-		mushroom.setX(MathUtils.random(-240,2400));
-		mushroom.setY(0);
-		Rectangle hitbox = new Rectangle(mushroom.getX()+ 252, 196,92,204);
-		mushroom.setmHitArea(hitbox);
+		mushroom.posX = MathUtils.random(-240,2400);
+		mushroom.posY = 0;
+		Rectangle hitbox = new Rectangle(mushroom.posX+ 252, 196,92,204);
+		mushroom.hitbox = hitbox;
 		mushrooms.add(mushroom);
 		lastSpawnTimeMushroom = TimeUtils.nanoTime();
 	}
@@ -129,76 +121,76 @@ public class MyGdxGame extends ApplicationAdapter {
 			stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
 
 			TextureRegion currentFrame;
-			if (TimeUtils.nanoTime() - lastSpawnTimeSkeleton > 14000000000L){
+			if (TimeUtils.nanoTime() - lastSpawnTimeSkeleton > 17000000000L - 100000000 * stateTime){
 				spawnSkeleton();
 			}
 
-			if (TimeUtils.nanoTime() - lastSpawnTimeFlyingEye > 10000000000L){
+			if (TimeUtils.nanoTime() - lastSpawnTimeFlyingEye > 13000000000L - 100000000 * stateTime){
 				spawnFlyingEye();
 			}
 
-			if (TimeUtils.nanoTime() - lastspawnTimegoblin > 6000000000L){
+			if (TimeUtils.nanoTime() - lastspawnTimegoblin > 11000000000L - 100000000 * stateTime){
 				spawngoblin();
 			}
-			if (TimeUtils.nanoTime() - lastSpawnTimeMushroom > 4000000000L){
+			if (TimeUtils.nanoTime() - lastSpawnTimeMushroom > 7000000000L - 100000000 * stateTime){
 				spawnMushroom();
 			}
 
 			if(Gdx.input.isKeyPressed(Input.Keys.A)){
 				flip = true;
 				currentFrame = player.walkAnimation.getKeyFrame(stateTime, true);
-				playerX -= 400 * Gdx.graphics.getDeltaTime();
+				player.posX -= 400 * Gdx.graphics.getDeltaTime();
 				count = 0;
 			} else if(Gdx.input.isKeyPressed(Input.Keys.D)){
 				flip = false;
 				currentFrame = player.walkAnimation.getKeyFrame(stateTime, true);
-				playerX += 400 * Gdx.graphics.getDeltaTime();
+				player.posX += 400 * Gdx.graphics.getDeltaTime();
 				count = 0;
 			} else if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
 				currentFrame = player.attackAnimation.getKeyFrame(stateTime, true);
 				count++;
 				for(Skeleton skeleton : skeletons){
-					if(playerHitbox.overlaps(skeleton.getHitbox()) && (count % 78 == 12
+					if(player.hitbox.overlaps(skeleton.hitbox) && (count % 78 == 12
 							|| count % 78 == 33
 							|| count % 78 == 54 )){
-						skeleton.setTakeHit(true);
+						skeleton.takeHit = true;
 						player.attack(skeleton);
 						skeleton.hp -= player.attack;
 					}
 				}
 				for(Goblin goblin1 : goblins){
-					if(playerHitbox.overlaps(goblin1.getHitbox()) && (count % 78 == 12
+					if(player.hitbox.overlaps(goblin1.hitbox) && (count % 78 == 12
 							|| count % 78 == 33
 							|| count % 78 == 54 )){
-						goblin1.setTakeHit(true);
+						goblin1.takeHit = true;
 						player.attack(goblin1);
 						goblin1.hp -= player.attack;
 					}
 				}
 				for(FlyingEye fl : flyingeyes){
-					if(playerHitbox.overlaps(fl.getHitbox()) && (count % 78 == 12
+					if(player.hitbox.overlaps(fl.hitbox) && (count % 78 == 12
 							|| count % 78 == 33
 							|| count % 78 == 54 )){
-						fl.setTakeHit(true);
+						fl.takeHit = true;
 						player.attack(fl);
 						fl.hp -= player.attack;
 					}
 				}
 				for(Mushroom mushroom1 : mushrooms){
-					if(playerHitbox.overlaps(mushroom1.getmHitArea()) && (count % 78 == 12
+					if(player.hitbox.overlaps(mushroom1.hitbox) && (count % 78 == 12
 							|| count % 78 == 33
 							|| count % 78 == 54 )){
-						mushroom1.setmIsHit(true);
+						mushroom1.takeHit = true;
 						player.attack(mushroom1);
 						mushroom1.hp -= player.attack;
 					}
 				}
 			} else if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
-				currentFrame = player.slideAnimation.getKeyFrame(stateTime, true);
+				currentFrame = player.getSlideAnimation().getKeyFrame(stateTime, true);
 				if(flip){
-					playerX -= 600 * Gdx.graphics.getDeltaTime();
+					player.posX -= 600 * Gdx.graphics.getDeltaTime();
 				} else{
-					playerX += 600 * Gdx.graphics.getDeltaTime();
+					player.posX += 600 * Gdx.graphics.getDeltaTime();
 				}
 				count = 0;
 			}else {
@@ -206,9 +198,9 @@ public class MyGdxGame extends ApplicationAdapter {
 				count = 0;
 			}
 			if(flip){
-				playerHitbox.setPosition(playerX - 22.14f ,playerY+ 99.75f);
+				player.hitbox.setPosition(player.posX - 22.14f ,player.posY+ 99.75f);
 			}else {
-				playerHitbox.setPosition(playerX + 118.75f ,playerY+ 99.75f);
+				player.hitbox.setPosition(player.posX + 118.75f ,player.posY+ 99.75f);
 			}
 			batch.begin();
 			batch.draw(img, 0, 0);
@@ -219,16 +211,16 @@ public class MyGdxGame extends ApplicationAdapter {
 					if (skeleton.isDeathFinished()) {
 						iter.remove();
 					} else {
-						skeleton.setCurrentFrame(skeleton.deathAnimation.getKeyFrame(skeleton.getDeathStateTime(),true));
+						skeleton.currentFrame = skeleton.deathAnimation.getKeyFrame(skeleton.deathStateTime,true);
 					}
-				} else if(skeleton.isTakeHit()){
-					skeleton.setCurrentFrame(skeleton.takeHitAnimation.getKeyFrame(skeleton.getTakeHitStateTime(),true));
-					skeleton.setTakeHit(false);
+				} else if(skeleton.takeHit){
+					skeleton.currentFrame = skeleton.takeHitAnimation.getKeyFrame(skeleton.stateTime,true);
+					skeleton.takeHit = false;
 				}else {
 					skeleton.update(Gdx.graphics.getDeltaTime());
-					skeleton.setCurrentFrame(skeleton.idleAnimation.getKeyFrame(skeleton.getStateTime(),true));
+					skeleton.currentFrame = skeleton.idleAnimation.getKeyFrame(skeleton.stateTime,true);
 				}
-				batch.draw(skeleton.getCurrentFrame(), skeleton.getPosX(), skeleton.getPosY(), 600, 600);
+				batch.draw(skeleton.currentFrame, skeleton.posX, skeleton.posY, 600, 600);
 
 			}
 
@@ -239,16 +231,16 @@ public class MyGdxGame extends ApplicationAdapter {
 					if (fl2.isDeathFinished()) {
 						iter.remove();
 					} else {
-						fl2.setCurrentFrame(fl2.deathAnimation.getKeyFrame(fl2.getDeathStateTime(),true));
+						fl2.currentFrame = fl2.deathAnimation.getKeyFrame(fl2.deathStateTime,true);
 					}
-				} else if(fl2.isTakeHit()){
-					fl2.setCurrentFrame(fl2.takeHitAnimation.getKeyFrame(fl2.getTakeHitStateTime(),true));
-					fl2.setTakeHit(false);
+				} else if(fl2.takeHit){
+					fl2.currentFrame = fl2.takeHitAnimation.getKeyFrame(fl2.stateTime,true);
+					fl2.takeHit = false;
 				}else {
 					fl2.update(Gdx.graphics.getDeltaTime());
-					fl2.setCurrentFrame(fl2.flightAnimation.getKeyFrame(fl2.getStateTime(),true));
+					fl2.currentFrame = fl2.idleAnimation.getKeyFrame(fl2.stateTime,true);
 				}
-				batch.draw(fl2.getCurrentFrame(), fl2.getPosX(),fl2.getPosY(), 600, 600);
+				batch.draw(fl2.currentFrame, fl2.posX,fl2.posY, 600, 600);
 
 			}
 			for (Iterator<Goblin> iter = goblins.iterator(); iter.hasNext();){
@@ -258,16 +250,16 @@ public class MyGdxGame extends ApplicationAdapter {
 					if (goblin1.isDeathFinished()) {
 						iter.remove();
 					} else {
-						goblin1.setCurrentFrame(goblin1.deathAnimation.getKeyFrame(goblin1.getDeathStateTime(),true));
+						goblin1.currentFrame = goblin1.deathAnimation.getKeyFrame(goblin1.deathStateTime,true);
 					}
-				} else if(goblin1.isTakeHit()){
-					goblin1.setCurrentFrame(goblin1.takeHitAnimation.getKeyFrame(goblin1.getTakeHitStateTime(),true));
-					goblin1.setTakeHit(false);
+				} else if(goblin1.takeHit){
+					goblin1.currentFrame = goblin1.takeHitAnimation.getKeyFrame(goblin1.stateTime,true);
+					goblin1.takeHit = false;
 				}else {
 					goblin1.update(Gdx.graphics.getDeltaTime());
-					goblin1.setCurrentFrame(goblin1.idleAnimation.getKeyFrame(goblin1.getStateTime(),true));
+					goblin1.currentFrame = goblin1.idleAnimation.getKeyFrame(goblin1.stateTime,true);
 				}
-				batch.draw(goblin1.getCurrentFrame(), goblin1.getPosX(), goblin1.getPosY(), 600, 600);
+				batch.draw(goblin1.currentFrame, goblin1.posX, goblin1.posY, 600, 600);
 
 			}
 			for (Iterator<Mushroom> iter = mushrooms.iterator(); iter.hasNext();){
@@ -277,25 +269,25 @@ public class MyGdxGame extends ApplicationAdapter {
 					if (m1.isDeathFinished()) {
 						iter.remove();
 					} else {
-						m1.setmCurrFrame(m1.mDeadAnimation.getKeyFrame(m1.getmDeathTime(),true));
+						m1.currentFrame = m1.deathAnimation.getKeyFrame(m1.deathStateTime,true);
 					}
-				} else if(m1.ismIsHit()){
-					m1.setmCurrFrame(m1.mIsHitAnimation.getKeyFrame(m1.getmIsHitTime(),true));
-					m1.setmIsHit(false);
+				} else if(m1.takeHit){
+					m1.currentFrame = m1.takeHitAnimation.getKeyFrame(m1.stateTime,true);
+					m1.takeHit = false;
 				}else {
 					m1.update(Gdx.graphics.getDeltaTime());
-					m1.setmCurrFrame(m1.mIdleAnimation.getKeyFrame(m1.getmSTime(),true));
+					m1.currentFrame = m1.idleAnimation.getKeyFrame(m1.stateTime,true);
 				}
-				batch.draw(m1.getmCurrFrame(), m1.getX(), m1.getY(), 600, 600);
+				batch.draw(m1.currentFrame, m1.posX, m1.posY, 600, 600);
 
 			}
-			if(flip && playerX <= -90){
-				playerX = -90;
+			if(flip && player.posX <= -90){
+				player.posX = -90;
 			}
-			if(!flip && playerX >= 2598.75f){
-				playerX = 2598.75f;
+			if(!flip && player.posX >= 2599){
+				player.posX = 2599;
 			}
-			batch.draw(currentFrame, flip ? playerX+266 : playerX, playerY, flip ? -380 : 380, 380);
+			batch.draw(currentFrame, flip ? player.posX+266 : player.posX, player.posY, flip ? -380 : 380, 380);
 			font.draw(batch,(int)stateTime +"", 2500,1400);
 			batch.end();
 			if(skeletons.size + flyingeyes.size + goblins.size + mushrooms.size >=10){
