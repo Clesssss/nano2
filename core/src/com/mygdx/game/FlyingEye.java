@@ -128,7 +128,7 @@ public class FlyingEye extends Character{
         deathAnimation = new Animation<TextureRegion>(0.2f, deathFrames);
     }
     void takeHit(){
-        Texture takeHitSheet = new Texture("Monsters_Creatures_Fantasy/Flying eye/Take Hit2.png");
+        Texture takeHitSheet = new Texture("Monsters_Creatures_Fantasy/Flying eye/Take Hit.png");
         TextureRegion[][] tmpTakeHit = TextureRegion.split(takeHitSheet,
                 takeHitSheet.getWidth(),
                 takeHitSheet.getHeight());

@@ -107,6 +107,12 @@ public class Mushroom extends Character{
     public Rectangle getmHitArea() {
         return mHitArea;
     }
+    public void update(float deltaTime){
+        mDeathTime += deltaTime;
+    }
+    public void updateDeath(float deltaTime){
+        mDeathTime += deltaTime;
+    }
 
     public void setmHitArea(Rectangle mHitArea) {
         this.mHitArea = mHitArea;
@@ -141,7 +147,7 @@ public class Mushroom extends Character{
         int index=0;
         Texture hitSheet = new Texture("Monsters_Creatures_Fantasy/Goblin/Take Hit.png");
         TextureRegion[][] tmphit = TextureRegion.split(hitSheet, hitSheet.getWidth()/4, hitSheet.getHeight());
-        TextureRegion[] hitFrame = new TextureRegion[1];
+        TextureRegion[] hitFrame = new TextureRegion[4];
         for (int i=0;i<1;i++){
             for (int j=0;j<4;j++){
                 hitFrame[index++] = tmphit[i][j];
