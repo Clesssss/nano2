@@ -62,6 +62,8 @@ public class MyGdxGame extends ApplicationAdapter {
 					current = State.MAIN;
 				} else if(current == State.DESC && keyCode == Input.Keys.ENTER){
 					current = State.MAIN;
+				} else if(current == State.GAMEOVER && keyCode == Input.Keys.ENTER){
+					current = State.START;
 				}
 				return true;
 			}
@@ -279,6 +281,7 @@ public class MyGdxGame extends ApplicationAdapter {
 				batch.draw(rekt, playerX + 118.75f,playerY + 99.75f, 166.25f,185.25f);
 			}
 			batch.draw(currentFrame, flip ? playerX+266 : playerX, playerY, flip ? -380 : 380, 380);
+			font.draw(batch,(int)stateTime +"", 2500,1400);
 			batch.end();
 			if(skeletons.size + flyingeyes.size + goblins.size + mushrooms.size >=10){
 				current = State.GAMEOVER;
@@ -306,8 +309,7 @@ public class MyGdxGame extends ApplicationAdapter {
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			batch.begin();
 			font.draw(batch, "GAME OVER", Gdx.graphics.getWidth()*.4f, Gdx.graphics.getHeight() * .5f);
-			font.draw(batch, "Press ENTER to play.", Gdx.graphics.getWidth()*.3f, Gdx.graphics.getHeight() * .2f);
-
+			font.draw(batch, "Press ENTER to return to START screen.", Gdx.graphics.getWidth()*.3f, Gdx.graphics.getHeight() * .2f);
 			batch.end();
 		}else{
 			Gdx.gl.glClearColor(0, 0, 0, 1);
