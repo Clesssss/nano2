@@ -266,6 +266,26 @@ public class MyGdxGame extends ApplicationAdapter {
 			batch.draw(goblin1.getCurrentFrame(), goblin1.getPosX(), goblin1.getPosY(), 600, 600);
 
 		}
+		for (Iterator<Mushroom> iter = mushrooms.iterator(); iter.hasNext();){
+			Mushroom m1 = iter.next();
+			batch.draw(rekt, m1.getX()+ 240, 196,180,204);
+			if(m1.hp <= 0){
+				m1.updateDeath(Gdx.graphics.getDeltaTime());
+				if (m1.isDeathFinished()) {
+					iter.remove();
+				} else {
+					m1.setmCurrFrame(m1.mDeadAnimation.getKeyFrame(m1.getmDeathTime(),true));
+				}
+			} else if(m1.ismIsHit()){
+				m1.setmCurrFrame(m1.mIsHitAnimation.getKeyFrame(m1.getmIsHitTime(),true));
+				m1.setmIsHit(false);
+			}else {
+				m1.update(Gdx.graphics.getDeltaTime());
+				m1.setmCurrFrame(m1.mIdleAnimation.getKeyFrame(m1.getmSTime(),true));
+			}
+			batch.draw(skeleton.getCurrentFrame(), skeleton.getPosX(), skeleton.getPosY(), 600, 600);
+
+		}
 
 		if(flip){
 			batch.draw(rekt, playerX -22.14f, playerY+ 99.75f, 166.25f,185.25f);

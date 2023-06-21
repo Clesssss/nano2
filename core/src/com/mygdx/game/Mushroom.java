@@ -118,6 +118,9 @@ public class Mushroom extends Character{
     public void setmHitArea(Rectangle mHitArea) {
         this.mHitArea = mHitArea;
     }
+    public boolean isDeathFinished(){
+        return mDeadAnimation.isAnimationFinished(mDeathTime);
+    }
 
     public void idling(){
         int index =0;
