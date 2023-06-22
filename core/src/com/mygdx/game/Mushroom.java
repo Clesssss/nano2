@@ -3,9 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 
-import java.awt.*;
 
 public class Mushroom extends Enemy{
 
@@ -66,7 +64,7 @@ public class Mushroom extends Enemy{
     }
     @Override
     public void isAttacked(int damage) {
-
+        hp -= damage;
     }
 
     @Override

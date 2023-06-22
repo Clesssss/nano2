@@ -21,7 +21,6 @@ import java.util.Iterator;
 public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
-	private OrthographicCamera camera;
 	private Array<Skeleton> skeletons;
 	private Array<FlyingEye> flyingeyes;
 	private Array<Mushroom> mushrooms;
@@ -61,9 +60,9 @@ public class MyGdxGame extends ApplicationAdapter {
 			}
 		});
 
-		camera = new OrthographicCamera();
+		OrthographicCamera camera = new OrthographicCamera();
 		camera.setToOrtho(false, 2784,1650);
-		fitViewport = new FitViewport(2784,1650,camera);
+		fitViewport = new FitViewport(2784,1650, camera);
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 		font.getData().setScale(5);
@@ -80,8 +79,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		Skeleton skeleton = new Skeleton(20,10);
 		skeleton.posX = MathUtils.random(-240,2360);
 		skeleton.posY = 0;
-		Rectangle hitbox = new Rectangle(skeleton.posX+ 240, 196,128,204);
-		skeleton.hitbox = hitbox;
+		skeleton.hitbox = new Rectangle(skeleton.posX+ 240, 196,128,204);
 		skeletons.add(skeleton);
 		lastSpawnTimeSkeleton = TimeUtils.nanoTime();
 	}
@@ -90,8 +88,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		Goblin goblin1 = new Goblin(10,20);
 		goblin1.posX = MathUtils.random(-240,2400);
 		goblin1.posY = 0;
-		Rectangle hitbox = new Rectangle(goblin1.posX+ 236, 196,124,204);
-		goblin1.hitbox = hitbox;
+		goblin1.hitbox = new Rectangle(goblin1.posX+ 236, 196,124,204);
 		goblins.add(goblin1);
 		lastspawnTimegoblin = TimeUtils.nanoTime();
 	}
@@ -100,8 +97,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		FlyingEye flyingEye = new FlyingEye(5,10);
 		flyingEye.posX = MathUtils.random(-240,2400);
 		flyingEye.posY = 10;
-		Rectangle hitbox = new Rectangle(flyingEye.posX+ 236, 196,160,204);
-		flyingEye.hitbox = hitbox;
+		flyingEye.hitbox = new Rectangle(flyingEye.posX+ 236, 196,160,204);
 		flyingeyes.add(flyingEye);
 		lastSpawnTimeFlyingEye = TimeUtils.nanoTime();
 	}
@@ -109,13 +105,13 @@ public class MyGdxGame extends ApplicationAdapter {
 		Mushroom mushroom = new Mushroom(5,10);
 		mushroom.posX = MathUtils.random(-240,2400);
 		mushroom.posY = 0;
-		Rectangle hitbox = new Rectangle(mushroom.posX+ 252, 196,92,204);
-		mushroom.hitbox = hitbox;
+		mushroom.hitbox = new Rectangle(mushroom.posX+ 252, 196,92,204);
 		mushrooms.add(mushroom);
 		lastSpawnTimeMushroom = TimeUtils.nanoTime();
 	}
 	@Override
 	public void render () {
+
 		if (current == State.MAIN){
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Clear screen
 			stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
@@ -155,7 +151,7 @@ public class MyGdxGame extends ApplicationAdapter {
 							|| count % 78 == 54 )){
 						skeleton.takeHit = true;
 						player.attack(skeleton);
-						skeleton.hp -= player.attack;
+						skeleton.isAttacked(player.attack);
 					}
 				}
 				for(Goblin goblin1 : goblins){
@@ -164,7 +160,7 @@ public class MyGdxGame extends ApplicationAdapter {
 							|| count % 78 == 54 )){
 						goblin1.takeHit = true;
 						player.attack(goblin1);
-						goblin1.hp -= player.attack;
+						goblin1.isAttacked(player.attack);
 					}
 				}
 				for(FlyingEye fl : flyingeyes){
@@ -173,7 +169,7 @@ public class MyGdxGame extends ApplicationAdapter {
 							|| count % 78 == 54 )){
 						fl.takeHit = true;
 						player.attack(fl);
-						fl.hp -= player.attack;
+						fl.isAttacked(player.attack);
 					}
 				}
 				for(Mushroom mushroom1 : mushrooms){
@@ -182,7 +178,7 @@ public class MyGdxGame extends ApplicationAdapter {
 							|| count % 78 == 54 )){
 						mushroom1.takeHit = true;
 						player.attack(mushroom1);
-						mushroom1.hp -= player.attack;
+						mushroom1.isAttacked(player.attack);
 					}
 				}
 			} else if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
